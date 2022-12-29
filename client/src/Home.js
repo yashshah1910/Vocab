@@ -104,8 +104,8 @@ export default function Home() {
   let headersList = {
     Accept: "application/json",
     "Content-Type": "application/json",
-    // app_id: {Here app id goes},
-    // app_key: {Here app key goes},
+    app_id: "Your API ID",
+    app_key: "Your API KEY GOES HERE",
     "Access-Control-Allow-Origin": "*",
   };
 
@@ -128,19 +128,16 @@ export default function Home() {
   //function of add new word button
   async function onSubmit(e) {
     e.preventDefault();
-    //fetching data from oxford api
-    const response = await fetch(`api/v2/words/en-gb?q=${newWord}`, {
-      method: "GET",
-      headers: headersList,
-    });
-    const fetchedData = await response.json();
+    const data = {
+      name: newWord,
+    };
     //adding to MongoDB
     await fetch("http://localhost:5000/record/add", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(fetchedData),
+      body: JSON.stringify(data),
     }).catch((error) => {
       window.alert(error);
       return;
