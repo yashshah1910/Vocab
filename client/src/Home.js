@@ -170,7 +170,7 @@ export default function Home() {
     e.target.value
       ? setResult(
           records.filter((chg) => {
-            return chg.name.match(e.target.value);
+            return chg.name.match((e.target.value).toLowerCase());
           })
         )
       : setResult(records);
