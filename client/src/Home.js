@@ -100,15 +100,6 @@ export default function Home() {
   const [newWord, setNewWord] = useState(""); //storing word when user add new word
   const [cards, setCards] = useState([]); //storing cards from data of MongoDB (result)
 
-  //API headers
-  let headersList = {
-    Accept: "application/json",
-    "Content-Type": "application/json",
-    app_id: "Your API ID",
-    app_key: "Your API KEY GOES HERE",
-    "Access-Control-Allow-Origin": "*",
-  };
-
   //floating action button control
   const handleFabClickOpen = () => {
     setFabOpen(true);
@@ -131,6 +122,8 @@ export default function Home() {
     const data = {
       name: newWord,
     };
+
+    const [length, setLength] = useState(0); // to use in useEffect dependency array
     //adding to MongoDB
     await fetch("http://localhost:5000/record/add", {
       method: "POST",
@@ -138,13 +131,16 @@ export default function Home() {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(data),
-    }).catch((error) => {
-      window.alert(error);
-      return;
-    });
+    })
+      .then(() => {
+        setLength(length + 1);
+      })
+      .catch((error) => {
+        window.alert(error);
+        return;
+      });
     //closing FAB
     handleFabClose();
-    window.location.reload();
   }
 
   //Fetching records from MongoDB
@@ -165,7 +161,7 @@ export default function Home() {
     getRecords();
 
     return setResult(records);
-  }, [records.length]);
+  }, [records.length, length]);
 
   //handling searchbar
   function onChange(e) {
